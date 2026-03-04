@@ -1,6 +1,4 @@
-import {
-  createNativeStackNavigator,
-} from "@react-navigation/native-stack";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
 import Home from "@/app/Home";
 import CreateBudget from "@/app/CreateBudget";
@@ -13,6 +11,7 @@ const Route = createNativeStackNavigator<RoutesList>();
 export default function Routes() {
   return (
     <Route.Navigator
+      initialRouteName="home"
       screenOptions={{
         headerShown: false,
       }}
