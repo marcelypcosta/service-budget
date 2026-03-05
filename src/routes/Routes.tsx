@@ -14,6 +14,9 @@ export default function Routes() {
       initialRouteName="home"
       screenOptions={{
         headerShown: false,
+        contentStyle: {
+          backgroundColor: "#FFF",
+        },
       }}
     >
       <Route.Screen name="home" component={Home} />
