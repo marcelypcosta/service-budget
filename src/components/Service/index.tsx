@@ -49,3 +49,13 @@ export default function Service({
     </View>
   );
 }
+
+export function EmptyServiceList() {
+  return (
+    <View style={styles.container_empty_service_list}>
+      <Text style={styles.text_empty_service_list}>
+        Nenhum serviço adicionado
+      </Text>
+    </View>
+  );
+}

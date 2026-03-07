@@ -1,34 +1,11 @@
 import { Text, View } from "react-native";
 import { styles } from "./styles";
-import { MageIcon } from "../icons/MageIcons";
 import { theme } from "@/styles/theme";
-import Price2 from "../Price2";
-import Price from "../Price";
 
-function Discount({ discount }: { discount: number }) {
-  return (
-    <View
-      style={{
-        backgroundColor: theme.colors.gray100,
-        paddingVertical: 4,
-        paddingHorizontal: 8,
-        borderRadius: 4,
-      }}
-    >
-      <Text
-        style={{
-          color: theme.colors.successDark,
-          backgroundColor: theme.colors.successLight,
-          paddingVertical: 2,
-          paddingHorizontal: 6,
-          borderRadius: 6,
-        }}
-      >
-        {discount}% off
-      </Text>
-    </View>
-  );
-}
+import Price from "@/components/Price";
+import Price2 from "@/components/Price2";
+import Discount from "@/components/Discount";
+import { MageIcon } from "@/components/icons/MageIcons";
 
 function ValueLine({ children }: { children: React.ReactNode }) {
   return (

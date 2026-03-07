@@ -1,24 +1,23 @@
 import { Text, View, ViewStyle, TextStyle } from "react-native";
 import { styles } from "./style";
-
-type StatusVariant = "rascunho" | "aprovado" | "enviado" | "recusado";
+import { BudgetStatusType } from "@/types/budget";
 
 interface StatusProps {
-  status?: StatusVariant;
+  status?: BudgetStatusType;
   style?: ViewStyle;
 }
 
 export default function Status({
-  status: variant = "rascunho",
+  status: variant = "draft",
   style,
 }: StatusProps) {
   const getStatusLabel = () => {
     switch (variant) {
-      case "aprovado":
+      case "approved":
         return "Aprovado";
-      case "enviado":
+      case "submitted":
         return "Enviado";
-      case "recusado":
+      case "rejected":
         return "Recusado";
       default:
         return "Rascunho";

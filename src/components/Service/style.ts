@@ -5,7 +5,9 @@ export const styles = StyleSheet.create({
   container: {
     flexDirection: "row",
     alignItems: "center",
+    justifyContent: "center",
     gap: 16,
+    marginBottom: 20,
   },
   container_description: {
     flex: 1,
@@ -21,5 +23,13 @@ export const styles = StyleSheet.create({
   quantity: {
     ...theme.typography.textXs,
     color: theme.colors.gray600,
+  },
+  container_empty_service_list: {
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  text_empty_service_list: {
+    ...theme.typography.textXs,
+    color: theme.colors.gray500,
   },
 });

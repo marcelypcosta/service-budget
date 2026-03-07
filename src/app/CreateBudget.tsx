@@ -1,5 +1,7 @@
 import { useState } from "react";
-import { ScrollView, Text, View } from "react-native";
+import Discount from "@/components/Discount";
+import { quoteCreationStyles } from "@/styles";
+import { FlatList, ScrollView, Text, View } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 
@@ -7,267 +9,158 @@ import { theme } from "@/styles/theme";
 
 import Input from "@/components/Input";
 import Price from "@/components/Price";
+import Price2 from "@/components/Price2";
+import Check from "@/components/Check";
 import Status from "@/components/Status";
 import Button from "@/components/Button";
-import Price2 from "@/components/Price2";
 import Footer from "@/components/Footer";
-import Checkbox from "@/components/Check";
 import Service from "@/components/Service";
 import Header2 from "@/components/Header2";
-import FormCard from "@/components/FormCard";
+import ServiceModal from "@/components/ServiceModal";
+import BudgetSection from "@/components/BudgetSection";
 
 import { RoutesList } from "@/types/navigation";
-import { BudgetStatusType } from "@/types/budget";
+import { BudgetStatusType, ServiceIncluded } from "@/types/budget";
 
 type HeaderNavigationProp = NativeStackNavigationProp<RoutesList>;
 
+const MOCK_SERVICES: ServiceIncluded[] = [];
+
+const STATUS_OPTIONS: BudgetStatusType[] = [
+  "draft",
+  "approved",
+  "submitted",
+  "rejected",
+];
+
+const InfoLine = ({
+  title,
+  children,
+}: {
+  title: string;
+  children: React.ReactNode;
+}) => (
+  <View
+    style={{
+      flexDirection: "row",
+      alignItems: "center",
+      justifyContent: "space-between",
+    }}
+  >
+    <Text style={{ ...theme.typography.textSm, color: theme.colors.gray700 }}>
+      {title}
+    </Text>
+    <View
+      style={{
+        flexDirection: "row",
+        alignItems: "center",
+        gap: 12,
+      }}
+    >
+      {children}
+    </View>
+  </View>
+);
+
 export default function CreateBudget() {
   const navigation = useNavigation<HeaderNavigationProp>();
-  const [status, setStatus] = useState<BudgetStatusType>("rascunho");
+  const [status, setStatus] = useState<BudgetStatusType>("draft");
+  const [isServiceVisible, setIsServiceVisible] = useState(false);
 
   return (
-    <View style={{ flex: 1, marginTop: 64 }}>
+    <View style={quoteCreationStyles.container}>
       <ScrollView showsVerticalScrollIndicator={false}>
         {/* Header */}
         <Header2 />
 
         {/* Content */}
-        <View style={{ padding: 20, gap: 20 }}>
-          {/* Informações Gerais do Orçamento */}
-          <FormCard icon="shop" title="Informações Gerais">
-            <View style={{ padding: 16, gap: 12 }}>
+        <View style={quoteCreationStyles.content}>
+          {/* Informações Gerais */}
+          <BudgetSection icon="shop" title="Informações Gerais">
+            <View style={quoteCreationStyles.infoContent}>
               <Input placeholder="Título" />
               <Input placeholder="Cliente" />
             </View>
-          </FormCard>
+          </BudgetSection>
 
-          {/* Status do Orçamento */}
-          <FormCard icon="tag" title="Status">
-            <View
-              style={{
-                flexDirection: "row",
-                gap: 12,
-                flexWrap: "wrap",
-                padding: 16,
-              }}
-            >
-              <View
-                style={{
-                  flexDirection: "row",
-                  alignItems: "center",
-                  gap: 8,
-                  width: "47%",
-                }}
-              >
-                <Checkbox
-                  variant="radio"
-                  checked={status === "rascunho"}
-                  onChange={() => setStatus("rascunho")}
-                />
-                <Status status="rascunho" />
-              </View>
-
-              <View
-                style={{
-                  flexDirection: "row",
-                  alignItems: "center",
-                  gap: 8,
-                  width: "47%",
-                }}
-              >
-                <Checkbox
-                  variant="radio"
-                  checked={status === "aprovado"}
-                  onChange={() => setStatus("aprovado")}
-                />
-                <Status status="aprovado" />
-              </View>
-
-              <View
-                style={{
-                  flexDirection: "row",
-                  alignItems: "center",
-                  gap: 8,
-                  width: "47%",
-                }}
-              >
-                <Checkbox
-                  variant="radio"
-                  checked={status === "enviado"}
-                  onChange={() => setStatus("enviado")}
-                />
-                <Status status="enviado" />
-              </View>
-
-              <View
-                style={{
-                  flexDirection: "row",
-                  alignItems: "center",
-                  gap: 8,
-                  width: "47%",
-                }}
-              >
-                <Checkbox
-                  variant="radio"
-                  checked={status === "recusado"}
-                  onChange={() => setStatus("recusado")}
-                />
-                <Status status="recusado" />
-              </View>
+          {/* Status */}
+          <BudgetSection icon="tag" title="Status">
+            <View style={quoteCreationStyles.statusContent}>
+              {STATUS_OPTIONS.map((item) => (
+                <View key={item} style={quoteCreationStyles.statusItem}>
+                  <Check
+                    variant="radio"
+                    checked={status === item}
+                    onChange={() => setStatus(item)}
+                  />
+                  <Status status={item} />
+                </View>
+              ))}
             </View>
-          </FormCard>
+          </BudgetSection>
 
-          {/* Serviçoes Inclusos do Orçamento */}
-          <FormCard icon="noteWithText" title="Serviçoes Inclusos">
-            <View
-              style={{
-                paddingLeft: 20,
-                paddingRight: 16,
-                paddingTop: 16,
-                paddingBottom: 20,
-                gap: 20,
-              }}
-            >
-              {/* Componente de Adição de Serviço */}
-              <Service
-                title="Design de interfaces"
-                description="Criação de wireframes e protótipos interativos para websites e aplicativos."
-                price={100}
-                quantity={1}
-                isEditable
-              />
-              <Service
-                title="Desenvolvimento de aplicação web"
-                description="Implementação completa de aplicação web com React, Node.js e banco de dados."
-                price={5000}
-                quantity={1}
-                isEditable
-              />
-              <Service
-                title="Desenvolvimento de aplicativo móvel"
-                description="Criação de aplicativos móveis para iOS e Android com React Native."
-                price={10000}
-                quantity={1}
-                isEditable
-              />
-              <Button
-                icon="plus"
-                label="Adicionar Serviço"
-                variant="secondary"
-              />
-            </View>
-          </FormCard>
-
-          {/* Investimentos */}
-          <FormCard icon="creditCard" title="Investimentos">
+          {/* Serviços Inclusos do Orçamento */}
+          <BudgetSection icon="noteWithText" title="Serviços Inclusos">
             {/* Content */}
             <View
               style={{
                 paddingLeft: 20,
                 paddingRight: 16,
-                paddingTop: 16,
                 paddingBottom: 20,
-                gap: 12,
               }}
             >
-              {/* Subtotal */}
-              <View
-                style={{
-                  flexDirection: "row",
-                  alignItems: "center",
-                  justifyContent: "space-between",
-                }}
-              >
-                <Text>Subtotal</Text>
-                <View
-                  style={{
-                    flexDirection: "row",
-                    alignItems: "center",
-                    gap: 12,
-                  }}
-                >
-                  <Text style={{ color: theme.colors.gray600 }}>3 itens</Text>
-                  <Price2 price={15100} />
-                </View>
-              </View>
-              {/* Desconto */}
-              <View
-                style={{
-                  flexDirection: "row",
-                  alignItems: "center",
-                  justifyContent: "space-between",
-                  gap: 16,
-                }}
-              >
-                <View
-                  style={{ flexDirection: "row", alignItems: "center", gap: 8 }}
-                >
-                  <Text>Desconto</Text>
-                  <View
-                    style={{
-                      borderWidth: 1,
-                      borderColor: theme.colors.gray300,
-                      paddingVertical: 8,
-                      paddingHorizontal: 16,
-                      gap: 8,
-                      borderRadius: 999,
-                      backgroundColor: theme.colors.gray100,
-                    }}
-                  >
-                    <Text
-                      style={{
-                        ...theme.typography.textMd,
-                        color: theme.colors.gray700,
-                      }}
-                    >
-                      10%
-                    </Text>
-                  </View>
-                </View>
+              <FlatList
+                data={MOCK_SERVICES}
+                keyExtractor={(item) => String(item.id)}
+                renderItem={({ item }) => (
+                  <Service
+                    title={item.title}
+                    description={item.description}
+                    price={item.price}
+                    quantity={item.quantity}
+                    isEditable
+                  />
+                )}
+                style={{ gap: 20 }}
+                scrollEnabled={false}
+                contentContainerStyle={{ gap: 20 }}
+              />
 
-                <View
-                  style={{
-                    flexDirection: "row",
-                    alignItems: "center",
-                    gap: 12,
-                  }}
-                >
-                  <Price2 discount={1510} />
-                </View>
-              </View>
+              <Button
+                icon="plus"
+                label="Adicionar Serviço"
+                variant="secondary"
+                onPress={() => setIsServiceVisible(!isServiceVisible)}
+              />
+            </View>
+          </BudgetSection>
+
+          {/* Investimentos */}
+          <BudgetSection icon="creditCard" title="Investimentos">
+            {/* Content */}
+            <View style={quoteCreationStyles.investmentsContent}>
+              {/* Subtotal */}
+              <InfoLine title="Subtotal">
+                <Text style={{ color: theme.colors.gray600 }}>3 itens</Text>
+                <Price2 price={15100} />
+              </InfoLine>
+
+              {/* Desconto */}
+              <InfoLine title="Desconto">
+                <Discount discount={10} />
+                <Price2 discount={1510} />
+              </InfoLine>
             </View>
 
             {/* Valor Total */}
-            <View
-              style={{
-                flexDirection: "row",
-                alignItems: "center",
-                justifyContent: "space-between",
-                backgroundColor: theme.colors.gray100,
-                paddingVertical: 16,
-                paddingHorizontal: 20,
-              }}
-            >
-              <Text
-                style={{
-                  ...theme.typography.titleSm,
-                  color: theme.colors.gray700,
-                }}
-              >
-                Valor Total
-              </Text>
-              <View
-                style={{
-                  flexDirection: "column",
-                  alignItems: "flex-end",
-                  gap: 12,
-                }}
-              >
+            <View style={quoteCreationStyles.footer}>
+              <Text style={quoteCreationStyles.columnLabel}>Valor Total</Text>
+              <View style={quoteCreationStyles.columnValue}>
                 <Price2 subTotal={15100} />
                 <Price price={13590} />
               </View>
             </View>
-          </FormCard>
+          </BudgetSection>
         </View>
 
         {/* Footer */}
@@ -280,6 +173,11 @@ export default function CreateBudget() {
           <Button label="Salvar" icon="check" />
         </Footer>
       </ScrollView>
+
+      <ServiceModal
+        isServiceVisible={isServiceVisible}
+        setIsServiceVisible={setIsServiceVisible}
+      />
     </View>
   );
 }

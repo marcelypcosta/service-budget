@@ -1,38 +1,51 @@
+import { useState } from "react";
 import { View } from "react-native";
 
 import Input from "@/components/Input";
 import Button from "@/components/Button";
 import Header from "@/components/Header";
 import BudgetCard from "@/components/BudgetCard";
+import FilterModal from "@/components/FilterModal";
+import { homeStyles, layoutStyles } from "@/styles";
 
 export default function Home() {
+  const [isFilterVisible, setIsFilterVisible] = useState(false);
+
   return (
-    <View style={{ flex: 1, marginTop: 64 }}>
+    <View style={layoutStyles.container}>
       <Header />
-      <View style={{ paddingHorizontal: 20, paddingVertical: 24 }}>
+      <View style={homeStyles.content}>
         {/* Search and Filter */}
-        <View style={{ flexDirection: "row", gap: 8 }}>
+        <View style={homeStyles.search}>
           <Input
             icon="search"
             placeholder="Título ou Cliente"
             style={{ flex: 1 }}
           />
-          <Button icon="filter" variant="secondary" />
+          <Button
+            icon="filter"
+            variant="secondary"
+            onPress={() => setIsFilterVisible(!isFilterVisible)}
+          />
         </View>
 
-        {/* Budget List */}
-        <View style={{ gap: 8, marginTop: 24 }}>
+        <View style={homeStyles.list}>
           <BudgetCard
             data={{
               id: "1",
               title: "Desenvolvimento de aplicativo de loja online",
               client: "Soluções Tecnológicas Beta",
-              status: "aprovado",
+              status: "approved",
               price: 22300,
             }}
           />
         </View>
       </View>
+
+      <FilterModal
+        isFilterVisible={isFilterVisible}
+        setIsFilterVisible={setIsFilterVisible}
+      />
     </View>
   );
 }

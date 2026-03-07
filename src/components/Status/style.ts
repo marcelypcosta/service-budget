@@ -20,43 +20,43 @@ export const styles = StyleSheet.create({
   },
   
   // Variants
-  rascunho: {
+  draft: {
     backgroundColor: theme.colors.gray300,
   },
-  rascunhoDot: {
+  draftDot: {
     backgroundColor: theme.colors.gray400,
   },
-  rascunhoText: {
+  draftText: {
     color: theme.colors.gray500,
   },
 
-  aprovado: {
+  approved: {
     backgroundColor: theme.colors.successLight,
   },
-  aprovadoDot: {
+  approvedDot: {
     backgroundColor: theme.colors.successBase,
   },
-  aprovadoText: {
+  approvedText: {
     color: theme.colors.successDark,
   },
 
-  enviado: {
+  submitted: {  
     backgroundColor: theme.colors.infoLight,
   },
-  enviadoDot: {
+  submittedDot: {
     backgroundColor: theme.colors.infoBase,
   },
-  enviadoText: {
+  submittedText: {
     color: theme.colors.infoDark,
   },
 
-  recusado: {
+  rejected: {
     backgroundColor: theme.colors.dangerLight,
   },
-  recusadoDot: {
+  rejectedDot: {
     backgroundColor: theme.colors.dangerBase,
   },
-  recusadoText: {
+  rejectedText: {
     color: theme.colors.dangerDark,
   },
 });

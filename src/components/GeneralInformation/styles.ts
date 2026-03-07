@@ -24,12 +24,12 @@ export const styles = StyleSheet.create({
     color: theme.colors.gray700,
     ...theme.typography.titleLg,
   },
-  summary: {
+  content: {
     flexDirection: "column",
     gap: 12,
     padding: 16,
   },
-  summaryInfo: {
+  contentInfo: {
     flexDirection: "row",
     alignItems: "center",
     gap: 12,

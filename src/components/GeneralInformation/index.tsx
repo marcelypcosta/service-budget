@@ -3,7 +3,7 @@ import { MageIcon } from "../icons/MageIcons";
 import { theme } from "@/styles/theme";
 import { styles } from "./styles";
 
-function SummaryBudgetItem({ title, value }: { title: string; value: string }) {
+function Information({ title, value }: { title: string; value: string }) {
   return (
     <View style={{ flex: 1 }}>
       <Text style={{ color: theme.colors.gray600, ...theme.typography.textXs }}>
@@ -16,7 +16,7 @@ function SummaryBudgetItem({ title, value }: { title: string; value: string }) {
   );
 }
 
-export default function Summary() {
+export default function GeneralInformation() {
   return (
     <View style={styles.container}>
       {/* Header */}
@@ -30,11 +30,11 @@ export default function Summary() {
       </View>
 
       {/* Content Summary */}
-      <View style={styles.summary}>
-        <SummaryBudgetItem title="Cliente" value="Soluções Tecnologicas Beta" />
-        <View style={styles.summaryInfo}>
-          <SummaryBudgetItem title="Criado em" value="01/01/2023" />
-          <SummaryBudgetItem title="Atualizado em" value="01/01/2023" />
+      <View style={styles.content}>
+        <Information title="Cliente" value="Soluções Tecnologicas Beta" />
+        <View style={styles.contentInfo}>
+          <Information title="Criado em" value="01/01/2023" />
+          <Information title="Atualizado em" value="01/01/2023" />
         </View>
       </View>
     </View>

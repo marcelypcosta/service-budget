@@ -8,16 +8,17 @@ export const styles = StyleSheet.create({
     borderRadius: 10,
   },
   header: {
+    gap: 8,
     flexDirection: "row",
     alignItems: "center",
-    gap: 8,
     paddingHorizontal: 16,
     paddingVertical: 12,
     borderBottomWidth: 1,
     borderBottomColor: theme.colors.gray200,
+    marginBottom: 16,
   },
-  container: {
-    padding: 16,
-    gap: 12,
+  title: {
+    ...theme.typography.textXs,
+    color: theme.colors.gray500,
   },
 });

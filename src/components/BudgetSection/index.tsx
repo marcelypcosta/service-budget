@@ -6,7 +6,7 @@ import { MageIcon } from "@/components/icons/MageIcons";
 
 type IconName = React.ComponentProps<typeof MageIcon>["name"];
 
-export default function FormCard({
+export default function BudgetSection({
   icon,
   title,
   children,
@@ -19,11 +19,7 @@ export default function FormCard({
     <View style={styles.content}>
       <View style={styles.header}>
         <MageIcon name={icon} color={theme.colors.purpleBase} size={24} />
-        <Text
-          style={{ ...theme.typography.textXs, color: theme.colors.gray500 }}
-        >
-          {title}
-        </Text>
+        <Text style={styles.title}>{title}</Text>
       </View>
       {children}
     </View>
