@@ -34,37 +34,30 @@ export const theme = {
     titleLg: {
       fontSize: 18,
       fontFamily: "Lato_700Bold",
-      lineHeight: 25.2, // 140%
     },
     titleMd: {
       fontSize: 16,
       fontFamily: "Lato_700Bold",
-      lineHeight: 22.4, // 140%
     },
     titleSm: {
       fontSize: 14,
       fontFamily: "Lato_700Bold",
-      lineHeight: 19.6, // 140%
     },
     titleXs: {
       fontSize: 12,
       fontFamily: "Lato_700Bold",
-      lineHeight: 16.8, // 140%
     },
     textMd: {
       fontSize: 16,
       fontFamily: "Lato_400Regular",
-      lineHeight: 22.4, // 140%
     },
     textSm: {
       fontSize: 14,
       fontFamily: "Lato_400Regular",
-      lineHeight: 19.6, // 140%
     },
     textXs: {
       fontSize: 12,
       fontFamily: "Lato_400Regular",
-      lineHeight: 16.8, // 140%
     },
   },
 };

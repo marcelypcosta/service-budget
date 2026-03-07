@@ -1,7 +1,7 @@
 import { useState } from "react";
-import Discount from "@/components/Discount";
-import { quoteCreationStyles } from "@/styles";
 import { FlatList, ScrollView, Text, View } from "react-native";
+
+import { quoteCreationStyles } from "@/styles";
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 
@@ -19,18 +19,21 @@ import Header2 from "@/components/Header2";
 import ServiceModal from "@/components/ServiceModal";
 import BudgetSection from "@/components/BudgetSection";
 
+import { StatusEnum } from "@/enum/budget";
+
 import { RoutesList } from "@/types/navigation";
 import { BudgetStatusType, ServiceIncluded } from "@/types/budget";
+import Discount, { DiscountInput } from "@/components/Discount";
 
 type HeaderNavigationProp = NativeStackNavigationProp<RoutesList>;
 
 const MOCK_SERVICES: ServiceIncluded[] = [];
 
 const STATUS_OPTIONS: BudgetStatusType[] = [
-  "draft",
-  "approved",
-  "submitted",
-  "rejected",
+  StatusEnum.DRAFT,
+  StatusEnum.APPROVED,
+  StatusEnum.SUBMITTED,
+  StatusEnum.REJECTED,
 ];
 
 const InfoLine = ({
@@ -64,8 +67,9 @@ const InfoLine = ({
 
 export default function CreateBudget() {
   const navigation = useNavigation<HeaderNavigationProp>();
-  const [status, setStatus] = useState<BudgetStatusType>("draft");
+  const [status, setStatus] = useState<BudgetStatusType>(StatusEnum.DRAFT);
   const [isServiceVisible, setIsServiceVisible] = useState(false);
+  const [discount, setDiscount] = useState(0);
 
   return (
     <View style={quoteCreationStyles.container}>
@@ -147,7 +151,7 @@ export default function CreateBudget() {
 
               {/* Desconto */}
               <InfoLine title="Desconto">
-                <Discount discount={10} />
+                <DiscountInput discount={discount} onChangeDiscount={setDiscount} />
                 <Price2 discount={1510} />
               </InfoLine>
             </View>

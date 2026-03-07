@@ -1,5 +1,15 @@
-export type BudgetStatusType = "draft" | "approved" | "submitted" | "rejected";
-export type BudgetOrderType = "newest" | "oldest" | "highest_value" | "lowest_value";
+import { OrderEnum, StatusEnum } from "@/enum/budget";
+
+export type BudgetStatusType =
+  | StatusEnum.DRAFT
+  | StatusEnum.APPROVED
+  | StatusEnum.SUBMITTED
+  | StatusEnum.REJECTED;
+export type BudgetOrderType =
+  | OrderEnum.NEWEST
+  | OrderEnum.OLDEST
+  | OrderEnum.HIGHEST_VALUE
+  | OrderEnum.LOWEST_VALUE;
 
 export interface ServiceIncluded {
   id: number;
@@ -13,7 +23,6 @@ interface Budget {
   id: number;
   title: string;
   client: string;
-  service: string;
   services: ServiceIncluded[];
   discountPct?: number;
   status: BudgetStatusType;

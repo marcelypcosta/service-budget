@@ -8,6 +8,7 @@ import Button from "@/components/Button";
 import { ComponentModal as Modal } from "@/components/Modal";
 
 import { BudgetOrderType, BudgetStatusType } from "@/types/budget";
+import { OrderEnum, StatusEnum } from "@/enum/budget";
 
 interface FilterModalProps {
   isFilterVisible: boolean;
@@ -19,17 +20,17 @@ interface FilterModalProps {
 }
 
 const STATUS_OPTIONS: BudgetStatusType[] = [
-  "draft",
-  "approved",
-  "submitted",
-  "rejected",
+  StatusEnum.DRAFT,
+  StatusEnum.APPROVED,
+  StatusEnum.SUBMITTED,
+  StatusEnum.REJECTED,
 ];
 
 const ORDER_OPTIONS: { label: string; value: BudgetOrderType }[] = [
-  { label: "Mais recente", value: "newest" },
-  { label: "Mais antigo", value: "oldest" },
-  { label: "Maior valor", value: "highest_value" },
-  { label: "Menor valor", value: "lowest_value" },
+  { label: "Mais recente", value: OrderEnum.NEWEST },
+  { label: "Mais antigo", value: OrderEnum.OLDEST },
+  { label: "Maior valor", value: OrderEnum.HIGHEST_VALUE },
+  { label: "Menor valor", value: OrderEnum.LOWEST_VALUE },
 ];
 
 export function FilterModalContent({
@@ -44,7 +45,7 @@ export function FilterModalContent({
   setOrder: (order?: BudgetOrderType) => void;
 }) {
   return (
-    <View style={{ gap: 20}}>
+    <View style={{ gap: 20 }}>
       <View style={styles.section}>
         <Text style={styles.sectionTitle}>Status</Text>
         {STATUS_OPTIONS.map((item) => (
