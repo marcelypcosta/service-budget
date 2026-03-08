@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { View } from "react-native";
+import { View, FlatList, Text } from "react-native";
 
 import Input from "@/components/Input";
 import Button from "@/components/Button";
@@ -7,9 +7,13 @@ import Header from "@/components/Header";
 import BudgetCard from "@/components/BudgetCard";
 import FilterModal from "@/components/FilterModal";
 import { homeStyles, layoutStyles } from "@/styles";
+import { theme } from "@/styles/theme";
+
+import { useHomeViewModel } from "@/hooks/useHomeViewModel";
 
 export default function Home() {
   const [isFilterVisible, setIsFilterVisible] = useState(false);
+  const { budgets, isLoading, calculateBudgetTotal } = useHomeViewModel();
 
   return (
     <View style={layoutStyles.container}>
@@ -30,15 +34,60 @@ export default function Home() {
         </View>
 
         <View style={homeStyles.list}>
-          <BudgetCard
-            data={{
-              id: "1",
-              title: "Desenvolvimento de aplicativo de loja online",
-              client: "Soluções Tecnológicas Beta",
-              status: "approved",
-              price: 22300,
-            }}
-          />
+          {budgets.length === 0 && !isLoading ? (
+            <View
+              style={{
+                flex: 1,
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              <Text
+                style={{
+                  ...theme.typography.textMd,
+                  color: theme.colors.gray500,
+                }}
+              >
+                Nenhum orçamento encontrado
+              </Text>
+            </View>
+          ) : (
+            <FlatList
+              data={budgets}
+              keyExtractor={(item) => String(item.id)}
+              renderItem={({ item }) => (
+                <BudgetCard
+                  data={{
+                    id: String(item.id),
+                    title: item.title,
+                    client: item.client,
+                    status: item.status,
+                    price: calculateBudgetTotal(item),
+                  }}
+                />
+              )}
+              ListEmptyComponent={() => (
+                <View
+                  style={{
+                    flex: 1,
+                    justifyContent: "center",
+                    alignItems: "center",
+                  }}
+                >
+                  <Text
+                    style={{
+                      ...theme.typography.textMd,
+                      color: theme.colors.gray500,
+                    }}
+                  >
+                    Nenhum orçamento encontrado
+                  </Text>
+                </View>
+              )}
+              contentContainerStyle={{ gap: 12, paddingBottom: 20 }}
+              showsVerticalScrollIndicator={false}
+            />
+          )}
         </View>
       </View>
 

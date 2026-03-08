@@ -2,6 +2,7 @@ import { Text, View } from "react-native";
 import { MageIcon } from "../icons/MageIcons";
 import { theme } from "@/styles/theme";
 import { styles } from "./styles";
+import { formatDate } from "@/utils/formatter";
 
 function Information({ title, value }: { title: string; value: string }) {
   return (
@@ -16,7 +17,19 @@ function Information({ title, value }: { title: string; value: string }) {
   );
 }
 
-export default function GeneralInformation() {
+interface GeneralInformationProps {
+  title: string;
+  client: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export default function GeneralInformation({
+  title,
+  client,
+  createdAt,
+  updatedAt,
+}: GeneralInformationProps) {
   return (
     <View style={styles.container}>
       {/* Header */}
@@ -24,17 +37,15 @@ export default function GeneralInformation() {
         <View style={styles.icon}>
           <MageIcon name="shop" color={theme.colors.purpleBase} />
         </View>
-        <Text style={styles.title}>
-          Desenvolvimento de Aplicativo de loja online
-        </Text>
+        <Text style={styles.title}>{title}</Text>
       </View>
 
       {/* Content Summary */}
       <View style={styles.content}>
-        <Information title="Cliente" value="Soluções Tecnologicas Beta" />
+        <Information title="Cliente" value={client} />
         <View style={styles.contentInfo}>
-          <Information title="Criado em" value="01/01/2023" />
-          <Information title="Atualizado em" value="01/01/2023" />
+          <Information title="Criado em" value={formatDate(createdAt)} />
+          <Information title="Atualizado em" value={formatDate(updatedAt)} />
         </View>
       </View>
     </View>

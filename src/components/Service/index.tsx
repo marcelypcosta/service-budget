@@ -4,13 +4,14 @@ import { theme } from "@/styles/theme";
 import Price from "@/components/Price";
 import { MageIcon } from "../icons/MageIcons";
 import { styles } from "./style";
-
 interface ServiceProps {
   title: string;
   description: string;
   price: number;
   quantity: number;
   isEditable?: boolean;
+  onPress?: () => void;
+  onLongPress?: () => void;
 }
 
 export default function Service({
@@ -19,9 +20,16 @@ export default function Service({
   price,
   quantity,
   isEditable = false,
+  onPress,
+  onLongPress,
 }: ServiceProps) {
   return (
-    <View style={styles.container}>
+    <TouchableOpacity
+      style={styles.container}
+      onPress={onPress}
+      onLongPress={onLongPress}
+      activeOpacity={onPress ? 0.7 : 1}
+    >
       {/* Descrição do serviço */}
       <View style={styles.container_description}>
         <Text style={theme.typography.titleSm}>{title}</Text>
@@ -42,11 +50,11 @@ export default function Service({
 
       {/* Botão de edição */}
       {isEditable && (
-        <TouchableOpacity activeOpacity={0.7}>
+        <View>
           <MageIcon name="editPen" color={theme.colors.purpleBase} size={20} />
-        </TouchableOpacity>
+        </View>
       )}
-    </View>
+    </TouchableOpacity>
   );
 }
 

@@ -1,10 +1,9 @@
-import { useState } from "react";
 import { FlatList, ScrollView, Text, View } from "react-native";
+import { Controller } from "react-hook-form";
+
+import { useCreateBudgetViewModel } from "@/hooks/useCreateBudgetViewModel";
 
 import { quoteCreationStyles } from "@/styles";
-import { useNavigation } from "@react-navigation/native";
-import { NativeStackNavigationProp } from "@react-navigation/native-stack";
-
 import { theme } from "@/styles/theme";
 
 import Input from "@/components/Input";
@@ -18,16 +17,10 @@ import Service from "@/components/Service";
 import Header2 from "@/components/Header2";
 import ServiceModal from "@/components/ServiceModal";
 import BudgetSection from "@/components/BudgetSection";
+import { DiscountInput } from "@/components/Discount";
 
 import { StatusEnum } from "@/enum/budget";
-
-import { RoutesList } from "@/types/navigation";
-import { BudgetStatusType, ServiceIncluded } from "@/types/budget";
-import Discount, { DiscountInput } from "@/components/Discount";
-
-type HeaderNavigationProp = NativeStackNavigationProp<RoutesList>;
-
-const MOCK_SERVICES: ServiceIncluded[] = [];
+import { BudgetStatusType } from "@/types/budget";
 
 const STATUS_OPTIONS: BudgetStatusType[] = [
   StatusEnum.DRAFT,
@@ -66,10 +59,23 @@ const InfoLine = ({
 );
 
 export default function CreateBudget() {
-  const navigation = useNavigation<HeaderNavigationProp>();
-  const [status, setStatus] = useState<BudgetStatusType>(StatusEnum.DRAFT);
-  const [isServiceVisible, setIsServiceVisible] = useState(false);
-  const [discount, setDiscount] = useState(0);
+  const {
+    control,
+    fields,
+    isServiceVisible,
+    setIsServiceVisible,
+    editingServiceIndex,
+    subTotal,
+    discountValue,
+    total,
+    handleAddService,
+    handleEditService,
+    handleDeleteService,
+    handleSaveService,
+    handleCancel,
+    handleSubmit,
+    isSubmitting,
+  } = useCreateBudgetViewModel();
 
   return (
     <View style={quoteCreationStyles.container}>
@@ -82,8 +88,36 @@ export default function CreateBudget() {
           {/* Informações Gerais */}
           <BudgetSection icon="shop" title="Informações Gerais">
             <View style={quoteCreationStyles.infoContent}>
-              <Input placeholder="Título" />
-              <Input placeholder="Cliente" />
+              <Controller
+                control={control}
+                name="title"
+                render={({
+                  field: { onChange, value },
+                  fieldState: { error },
+                }) => (
+                  <Input
+                    placeholder="Título"
+                    value={value}
+                    onChangeText={onChange}
+                    errorMessage={error?.message}
+                  />
+                )}
+              />
+              <Controller
+                control={control}
+                name="client"
+                render={({
+                  field: { onChange, value },
+                  fieldState: { error },
+                }) => (
+                  <Input
+                    placeholder="Cliente"
+                    value={value}
+                    onChangeText={onChange}
+                    errorMessage={error?.message}
+                  />
+                )}
+              />
             </View>
           </BudgetSection>
 
@@ -91,14 +125,21 @@ export default function CreateBudget() {
           <BudgetSection icon="tag" title="Status">
             <View style={quoteCreationStyles.statusContent}>
               {STATUS_OPTIONS.map((item) => (
-                <View key={item} style={quoteCreationStyles.statusItem}>
-                  <Check
-                    variant="radio"
-                    checked={status === item}
-                    onChange={() => setStatus(item)}
-                  />
-                  <Status status={item} />
-                </View>
+                <Controller
+                  key={item}
+                  control={control}
+                  name="status"
+                  render={({ field: { onChange, value } }) => (
+                    <View key={item} style={quoteCreationStyles.statusItem}>
+                      <Check
+                        variant="radio"
+                        checked={value === item}
+                        onChange={() => onChange(item)}
+                      />
+                      <Status status={item} />
+                    </View>
+                  )}
+                />
               ))}
             </View>
           </BudgetSection>
@@ -114,18 +155,25 @@ export default function CreateBudget() {
               }}
             >
               <FlatList
-                data={MOCK_SERVICES}
-                keyExtractor={(item) => String(item.id)}
-                renderItem={({ item }) => (
-                  <Service
-                    title={item.title}
-                    description={item.description}
-                    price={item.price}
-                    quantity={item.quantity}
-                    isEditable
-                  />
+                data={fields}
+                keyExtractor={(item) => item.id}
+                renderItem={({ item, index }) => (
+                  <View
+                    style={{
+                      marginBottom: index === fields.length - 1 ? 20 : 0,
+                    }}
+                  >
+                    <Service
+                      title={item.title}
+                      description={item.description}
+                      price={item.price}
+                      quantity={item.quantity}
+                      isEditable
+                      onPress={() => handleEditService(index)}
+                      onLongPress={() => handleDeleteService(item.title)}
+                    />
+                  </View>
                 )}
-                style={{ gap: 20 }}
                 scrollEnabled={false}
                 contentContainerStyle={{ gap: 20 }}
               />
@@ -134,7 +182,7 @@ export default function CreateBudget() {
                 icon="plus"
                 label="Adicionar Serviço"
                 variant="secondary"
-                onPress={() => setIsServiceVisible(!isServiceVisible)}
+                onPress={handleAddService}
               />
             </View>
           </BudgetSection>
@@ -145,14 +193,25 @@ export default function CreateBudget() {
             <View style={quoteCreationStyles.investmentsContent}>
               {/* Subtotal */}
               <InfoLine title="Subtotal">
-                <Text style={{ color: theme.colors.gray600 }}>3 itens</Text>
-                <Price2 price={15100} />
+                <Text style={{ color: theme.colors.gray600 }}>
+                  {fields.length} {fields.length === 1 ? "item" : "itens"}
+                </Text>
+                <Price2 price={subTotal} />
               </InfoLine>
 
               {/* Desconto */}
               <InfoLine title="Desconto">
-                <DiscountInput discount={discount} onChangeDiscount={setDiscount} />
-                <Price2 discount={1510} />
+                <Controller
+                  control={control}
+                  name="discountPct"
+                  render={({ field: { onChange, value } }) => (
+                    <DiscountInput
+                      discount={value || 0}
+                      onChangeDiscount={onChange}
+                    />
+                  )}
+                />
+                {discountValue > 0 && <Price2 discount={discountValue} />}
               </InfoLine>
             </View>
 
@@ -160,8 +219,8 @@ export default function CreateBudget() {
             <View style={quoteCreationStyles.footer}>
               <Text style={quoteCreationStyles.columnLabel}>Valor Total</Text>
               <View style={quoteCreationStyles.columnValue}>
-                <Price2 subTotal={15100} />
-                <Price price={13590} />
+                {discountValue > 0 && <Price2 subTotal={subTotal} />}
+                <Price price={total} />
               </View>
             </View>
           </BudgetSection>
@@ -169,18 +228,24 @@ export default function CreateBudget() {
 
         {/* Footer */}
         <Footer>
+          <Button label="Cancelar" variant="secondary" onPress={handleCancel} />
           <Button
-            label="Cancelar"
-            variant="secondary"
-            onPress={() => navigation.goBack()}
+            label={isSubmitting ? "Salvando..." : "Salvar"}
+            icon="check"
+            onPress={handleSubmit}
+            disabled={isSubmitting}
           />
-          <Button label="Salvar" icon="check" />
         </Footer>
       </ScrollView>
 
       <ServiceModal
         isServiceVisible={isServiceVisible}
         setIsServiceVisible={setIsServiceVisible}
+        onDelete={handleDeleteService}
+        onSave={handleSaveService}
+        initialData={
+          editingServiceIndex !== null ? fields[editingServiceIndex] : undefined
+        }
       />
     </View>
   );

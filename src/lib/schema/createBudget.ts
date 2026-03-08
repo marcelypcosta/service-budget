@@ -1,7 +1,7 @@
 import { StatusEnum } from "@/enum/budget";
 import * as z from "zod";
 
-const Service = z.object({
+export const ServiceSchema = z.object({
   title: z.string().min(1, "O título é obrigatório"),
   description: z.string().min(1, "A descrição é obrigatória"),
   price: z
@@ -15,16 +15,18 @@ const Service = z.object({
     .positive("A quantidade deve ser um número inteiro positivo"),
 });
 
-const Budget = z.object({
+export type ServiceSchemaType = z.infer<typeof ServiceSchema>;
+
+export const Budget = z.object({
   title: z.string().min(1, "O título é obrigatório"),
-  client: z.string().min(1, "O cliente é obrigatório"),
+  client: z.string().min(1, "O nome do cliente é obrigatório"),
   status: z.enum([
     StatusEnum.DRAFT,
     StatusEnum.APPROVED,
     StatusEnum.SUBMITTED,
     StatusEnum.REJECTED,
   ]),
-  services: z.array(Service),
+  services: z.array(ServiceSchema),
   discountPct: z
     .number()
     .int()
@@ -32,3 +34,5 @@ const Budget = z.object({
     .max(100, "O percentual de desconto não pode exceder 100%")
     .optional(),
 });
+
+export type BudgetSchema = z.infer<typeof Budget>;

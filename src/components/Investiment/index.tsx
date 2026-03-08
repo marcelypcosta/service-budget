@@ -35,7 +35,17 @@ function Label({ title }: { title: string }) {
   );
 }
 
-export default function Investiment() {
+export default function Investiment({
+  subTotal,
+  discountPct,
+  discountValue,
+  total,
+}: {
+  subTotal: number;
+  discountPct: number;
+  discountValue: number;
+  total: number;
+}) {
   return (
     <View style={styles.container}>
       {/* Header */}
@@ -44,23 +54,27 @@ export default function Investiment() {
       </View>
       <View style={styles.cotainerRight}>
         <View style={styles.header}>
-          <ValueLine>
-            <Label title="Subtotal" />
-            <Price2 subTotal={15100} />
-          </ValueLine>
-          <ValueLine>
-            <View
-              style={{
-                flexDirection: "row",
-                alignItems: "center",
-                gap: 8,
-              }}
-            >
-              <Label title="Desconto" />
-              <Discount discount={10} />
-            </View>
-            <Price2 discount={1510} />
-          </ValueLine>
+          {subTotal > 0 && (
+            <ValueLine>
+              <Label title="Subtotal" />
+              <Price2 subTotal={subTotal} />
+            </ValueLine>
+          )}
+          {discountPct > 0 && (
+            <ValueLine>
+              <View
+                style={{
+                  flexDirection: "row",
+                  alignItems: "center",
+                  gap: 8,
+                }}
+              >
+                <Label title="Desconto" />
+                <Discount discount={discountPct} />
+              </View>
+              <Price2 discount={discountValue} />
+            </ValueLine>
+          )}
         </View>
 
         <View style={styles.separator} />
@@ -75,7 +89,7 @@ export default function Investiment() {
             >
               Investimento Total
             </Text>
-            <Price price={13590} />
+            <Price price={total} />
           </ValueLine>
         </View>
       </View>

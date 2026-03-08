@@ -23,7 +23,8 @@ export const styles = StyleSheet.create({
         gap: 8,
     },
     header: {
-        
+        flexDirection: "column",
+        gap: 8,
     },
     separator: {
         height: 1,

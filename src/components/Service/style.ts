@@ -7,7 +7,6 @@ export const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     gap: 16,
-    marginBottom: 20,
   },
   container_description: {
     flex: 1,

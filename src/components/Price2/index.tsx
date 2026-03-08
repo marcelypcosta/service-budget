@@ -1,5 +1,6 @@
 import { Text } from "react-native";
 import { styles } from "./styles";
+import { formatPrice } from "@/utils/formatter";
 
 export default function Price2({
   price,
@@ -14,10 +15,7 @@ export default function Price2({
     return (
       <Text style={styles.discount}>
         <Text style={styles.priceSymbolDiscount}>R$</Text> -
-        {discount.toLocaleString("pt-BR", {
-          minimumFractionDigits: 2,
-          maximumFractionDigits: 2,
-        })}
+        {formatPrice(discount)}
       </Text>
     );
   }
@@ -25,11 +23,7 @@ export default function Price2({
   if (price) {
     return (
       <Text style={styles.price}>
-        <Text style={styles.priceSymbol}>R$</Text>{" "}
-        {price.toLocaleString("pt-BR", {
-          minimumFractionDigits: 2,
-          maximumFractionDigits: 2,
-        })}
+        <Text style={styles.priceSymbol}>R$</Text> {formatPrice(price)}
       </Text>
     );
   }
@@ -37,11 +31,7 @@ export default function Price2({
   if (subTotal) {
     return (
       <Text style={styles.subTotal}>
-        <Text style={styles.priceSymbol}>R$</Text>{" "}
-        {subTotal.toLocaleString("pt-BR", {
-          minimumFractionDigits: 2,
-          maximumFractionDigits: 2,
-        })}
+        <Text style={styles.priceSymbol}>R$</Text> {formatPrice(subTotal)}
       </Text>
     );
   }

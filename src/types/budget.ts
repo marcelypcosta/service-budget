@@ -19,7 +19,7 @@ export interface ServiceIncluded {
   price: number;
 }
 
-interface Budget {
+export interface Budget {
   id: number;
   title: string;
   client: string;

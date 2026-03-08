@@ -35,4 +35,10 @@ export const styles = StyleSheet.create({
     ...theme.typography.textMd,
     color: theme.colors.gray700,
   },
+  errorText: {
+    color: theme.colors.dangerBase,
+    ...theme.typography.textXs, 
+    marginTop: 4,
+    marginLeft: 4, 
+  },
 });
