@@ -11,7 +11,6 @@ interface ServiceProps {
   quantity: number;
   isEditable?: boolean;
   onPress?: () => void;
-  onLongPress?: () => void;
 }
 
 export default function Service({
@@ -21,13 +20,11 @@ export default function Service({
   quantity,
   isEditable = false,
   onPress,
-  onLongPress,
 }: ServiceProps) {
   return (
     <TouchableOpacity
       style={styles.container}
       onPress={onPress}
-      onLongPress={onLongPress}
       activeOpacity={onPress ? 0.7 : 1}
     >
       {/* Descrição do serviço */}

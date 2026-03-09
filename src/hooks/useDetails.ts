@@ -9,6 +9,7 @@ export function useDetailsViewModel(id: string) {
   const [isLoading, setIsLoading] = useState(true);
   const navigation = useNavigation();
 
+  /* Busca o orçamento pelo ID e atualiza o estado.*/
   const fetchBudget = async () => {
     try {
       setIsLoading(true);
@@ -27,37 +28,41 @@ export function useDetailsViewModel(id: string) {
     }
   };
 
+  /* Busca o orçamento quando a tela ganha foco. */
   useFocusEffect(
     useCallback(() => {
       fetchBudget();
-    }, [id])
+    }, [id]),
   );
 
-  const calculateSubtotal = () => {
-    if (!budget) return 0;
-    return budget.services.reduce(
-      (acc, service) => acc + service.price * service.quantity,
-      0
-    );
+  /* Exclui o orçamento e volta para a home. */
+  const deleteBudget = async () => {
+    if (!budget) return;
+    try {
+      await storageItems.delete(budget.id);
+      navigation.goBack();
+    } catch (error) {
+      console.error(error);
+    }
   };
 
-  const calculateDiscountValue = () => {
-    if (!budget) return 0;
-    const subTotal = calculateSubtotal();
-    return (subTotal * (budget.discountPct || 0)) / 100;
-  };
-
-  const calculateTotal = () => {
-    const subTotal = calculateSubtotal();
-    const discount = calculateDiscountValue();
-    return subTotal - discount;
+  /* Duplica o orçamento e volta para a home. */
+  const duplicateBudget = async () => {
+    if (!budget) return;
+    try {
+      const duplicatedBudget = await storageItems.duplicate(budget.id);
+      if (duplicatedBudget) {
+        navigation.goBack();
+      }
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   return {
     budget,
     isLoading,
-    calculateSubtotal,
-    calculateDiscountValue,
-    calculateTotal,
+    deleteBudget,
+    duplicateBudget,
   };
 }

@@ -10,11 +10,10 @@ import { theme } from "@/styles/theme";
 
 import { MageIcon } from "@/components/icons/MageIcons";
 
-import { ComponentModal as Modal } from "@/components/Modal";
-
+import { formatCurrency, parseCurrency } from "@/utils/formatter";
 import Input from "@/components/Input";
 import Button from "@/components/Button";
-
+import { ComponentModal as Modal } from "@/components/Modal";
 interface ServiceModalProps {
   isServiceVisible: boolean;
   setIsServiceVisible: (visible: boolean) => void;
@@ -58,17 +57,24 @@ export function ServiceModalContent({
         <Controller
           control={control}
           name="price"
-          render={({ field: { onChange, value }, fieldState: { error } }) => (
+        render={({ field: { onChange, value }, fieldState: { error } }) => {
+          const displayValue = value ? formatCurrency(value) : "R$ 0,00";
+
+          return (
             <Input
               placeholder={"R$ 0,00"}
               keyboardType="numeric"
               style={{ flex: 1 }}
-              value={value ? String(value) : ""}
-              onChangeText={(text) => onChange(Number(text))}
+              value={displayValue}
+              onChangeText={(text) => {
+                const parsed = parseCurrency(text);
+                onChange(parsed);
+              }}
               errorMessage={error?.message}
             />
-          )}
-        />
+          );
+        }}
+      />
         <Controller
           control={control}
           name="quantity"

@@ -10,8 +10,16 @@ import BudgetSection from "@/components/BudgetSection";
 import Investiment from "@/components/Investiment";
 
 import { BudgetStatusType } from "@/types/budget";
-import { useDetailsViewModel } from "@/hooks/useDetailsViewModel";
+import { useDetailsViewModel } from "@/hooks/useDetails";
 import { theme } from "@/styles/theme";
+import { useNavigation } from "@react-navigation/native";
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import { RoutesList } from "@/types/navigation";
+import { calculateDiscountValue } from "@/utils/calculate";
+import { calculateTotal } from "@/utils/calculate";
+import { calculateSubtotal } from "@/utils/calculate";
+
+type HeaderNavigationProp = NativeStackNavigationProp<RoutesList>;
 
 export default function DetailsBudget({
   route,
@@ -19,13 +27,9 @@ export default function DetailsBudget({
   route: { params: { id: string; status: BudgetStatusType } };
 }) {
   const { id, status } = route.params;
-  const {
-    budget,
-    isLoading,
-    calculateSubtotal,
-    calculateDiscountValue,
-    calculateTotal,
-  } = useDetailsViewModel(id);
+  const navigation = useNavigation<HeaderNavigationProp>();
+  const { budget, isLoading, deleteBudget, duplicateBudget } =
+    useDetailsViewModel(id);
 
   if (isLoading || !budget) {
     return (
@@ -40,9 +44,13 @@ export default function DetailsBudget({
     );
   }
 
+  const handleEdit = () => {
+    navigation.navigate("create", { id });
+  };
+
   return (
     <View style={layoutStyles.container}>
-      <Header2 id={id} status={status} />
+      <Header2 id={id} status={budget.status} />
 
       <ScrollView showsVerticalScrollIndicator={false} style={{ flex: 1 }}>
         <View style={viewQuoteStyles.content}>
@@ -75,19 +83,19 @@ export default function DetailsBudget({
 
           {/* Investimento Total */}
           <Investiment
-            subTotal={calculateSubtotal()}
+            subTotal={calculateSubtotal(budget)}
             discountPct={budget.discountPct || 0}
-            discountValue={calculateDiscountValue()}
-            total={calculateTotal()}
+            discountValue={calculateDiscountValue(budget)}
+            total={calculateTotal(budget)}
           />
         </View>
       </ScrollView>
 
       <Footer style={{ justifyContent: "space-between" }}>
         <View style={{ flexDirection: "row", gap: 8 }}>
-          <Button icon="trash2" variant="danger" />
-          <Button icon="copy" variant="secondary" />
-          <Button icon="editPen" variant="secondary" />
+          <Button icon="trash2" variant="danger" onPress={deleteBudget} />
+          <Button icon="copy" variant="secondary" onPress={duplicateBudget} />
+          <Button icon="editPen" variant="secondary" onPress={handleEdit} />
         </View>
 
         <Button

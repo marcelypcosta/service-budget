@@ -1,7 +1,7 @@
-import { FlatList, ScrollView, Text, View } from "react-native";
+import { FlatList, ScrollView, Text, View, ActivityIndicator } from "react-native";
 import { Controller } from "react-hook-form";
 
-import { useCreateBudgetViewModel } from "@/hooks/useCreateBudgetViewModel";
+import { useCreateBudgetViewModel } from "@/hooks/useCreate";
 
 import { quoteCreationStyles } from "@/styles";
 import { theme } from "@/styles/theme";
@@ -75,7 +75,23 @@ export default function CreateBudget() {
     handleCancel,
     handleSubmit,
     isSubmitting,
+    isLoading,
+    isEditing,
+    totalItems,
   } = useCreateBudgetViewModel();
+
+  if (isLoading) {
+    return (
+      <View
+        style={[
+          quoteCreationStyles.container,
+          { justifyContent: "center", alignItems: "center" },
+        ]}
+      >
+        <ActivityIndicator size="large" color={theme.colors.purpleBase} />
+      </View>
+    );
+  }
 
   return (
     <View style={quoteCreationStyles.container}>
@@ -170,7 +186,7 @@ export default function CreateBudget() {
                       quantity={item.quantity}
                       isEditable
                       onPress={() => handleEditService(index)}
-                      onLongPress={() => handleDeleteService(item.title)}
+                      
                     />
                   </View>
                 )}
@@ -194,7 +210,7 @@ export default function CreateBudget() {
               {/* Subtotal */}
               <InfoLine title="Subtotal">
                 <Text style={{ color: theme.colors.gray600 }}>
-                  {fields.length} {fields.length === 1 ? "item" : "itens"}
+                  {totalItems} {totalItems === 1 ? "item" : "itens"}
                 </Text>
                 <Price2 price={subTotal} />
               </InfoLine>

@@ -16,9 +16,11 @@ type HeaderNavigationProp = NativeStackNavigationProp<RoutesList>;
 export default function Header2({
   id,
   status,
+  title,
 }: {
   id?: string;
   status?: BudgetStatusType;
+  title?: string;
 }) {
   const navigation = useNavigation<HeaderNavigationProp>();
 
@@ -33,7 +35,9 @@ export default function Header2({
             onPress={() => navigation.goBack()}
           />
         </TouchableOpacity>
-        <Text style={styles.title}>Orçamento {id && <Text>#{id}</Text>}</Text>
+        <Text style={styles.title}>
+          {title ? title : `Orçamento ${id ? `#${id}` : ""}`}
+        </Text>
       </View>
       {status && <Status status={status} />}
     </View>
